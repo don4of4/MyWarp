@@ -133,7 +133,7 @@ public class Warp {
         }
         if (currWorld != null) {
             Location location = new Location(currWorld, x, y, z, yaw, pitch);
-            player.teleportTo(location);
+            player.teleport(location);
         } else {
             player.sendMessage(ChatColor.RED + "World " + world + " doesn't exist.");
         }
