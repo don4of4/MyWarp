@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.taylorkelly</groupId>
   <artifactId>mywarp</artifactId>
-  <version>1.10.5a</version>
+  <version>1.10.5c</version>
   <name>MyWarp</name>
   <url>http://www.bukkit.org</url>
   <dependencies>
