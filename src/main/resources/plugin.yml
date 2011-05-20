@@ -1,5 +1,5 @@
 name: MyWarp
-version: 1.10.5c
+version: 1.10.7
 main: me.taylorkelly.mywarp.MyWarp
 commands:
   warp:

@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>me.taylorkelly</groupId>
-  <artifactId>mywarp</artifactId>
-  <version>1.10.6</version>
+  <groupId>me.taylorkelly.mywarp</groupId>
+  <artifactId>MyWarp</artifactId>
+  <version>1.10.7</version>
   <name>MyWarp</name>
   <url>http://www.bukkit.org</url>
   <dependencies>
