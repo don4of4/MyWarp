@@ -1,5 +1,6 @@
 package me.taylorkelly.mywarp;
 
+import ru.tehkode.permissions.bukkit.*;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import org.anjocaido.groupmanager.GroupManager;
 
@@ -12,19 +13,24 @@ import org.bukkit.plugin.Plugin;
 public class WarpPermissions {
 
     private enum PermissionHandler {
-
-        PERMISSIONS, GROUP_MANAGER, NONE
+        PERMISSIONSEX, PERMISSIONS, GROUPMANAGER, NONE
     }
     private static PermissionHandler handler;
     private static Plugin permissionPlugin;
 
     public static void initialize(Server server) {
-        Plugin groupManager = server.getPluginManager().getPlugin("GroupManager");
+    	Plugin permissionsEx = server.getPluginManager().getPlugin("PermissionsEx");
+    	Plugin groupManager = server.getPluginManager().getPlugin("GroupManager");
         Plugin permissions = server.getPluginManager().getPlugin("Permissions");
 
-        if (groupManager != null) {
+        if (permissionsEx != null) {
+            permissionPlugin = permissionsEx;
+            handler = PermissionHandler.PERMISSIONSEX;
+            String version = permissionsEx.getDescription().getVersion();
+            WarpLogger.info("Permissions enabled using: PermissionsEx v" + version);
+        } else if (groupManager != null) {
             permissionPlugin = groupManager;
-            handler = PermissionHandler.GROUP_MANAGER;
+            handler = PermissionHandler.GROUPMANAGER;
             String version = groupManager.getDescription().getVersion();
             WarpLogger.info("Permissions enabled using: GroupManager v" + version);
         } else if (permissions != null) {
@@ -40,9 +46,11 @@ public class WarpPermissions {
 
     public static boolean permission(Player player, String permission, boolean defaultPerm) {
         switch (handler) {
+        	case PERMISSIONSEX:
+        		return ((PermissionsEx) permissionPlugin).getPermissionManager().has(player, permission);
             case PERMISSIONS:
                 return ((Permissions) permissionPlugin).getHandler().has(player, permission);
-            case GROUP_MANAGER:
+            case GROUPMANAGER:
                 return ((GroupManager) permissionPlugin).getWorldsHolder().getWorldPermissions(player).has(player, permission);
             case NONE:
                 return defaultPerm;
