@@ -16,7 +16,7 @@
     <dependency>
         <groupId>ru.tehkode</groupId>
         <artifactId>PermissionsEx</artifactId>
-        <version>[100,)</version>
+        <version>[1.02,)</version>
     </dependency>
     <dependency>
         <groupId>com.nijikokun.bukkit</groupId>
