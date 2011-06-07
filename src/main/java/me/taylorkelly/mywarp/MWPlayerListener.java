@@ -1,5 +1,9 @@
 package me.taylorkelly.mywarp;
 
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -7,6 +11,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class MWPlayerListener extends PlayerListener
 {
@@ -34,5 +39,14 @@ public class MWPlayerListener extends PlayerListener
       this.warpList.notWaiting(player);
       event.setCancelled(true);
     }
+  }
+  
+  @Override
+  public void onPlayerTeleport(PlayerTeleportEvent event) {
+	World world = event.getPlayer().getWorld();
+	Chunk chunk = world.getChunkAt(event.getTo());
+	int x = chunk.getX();
+	int z = chunk.getZ();
+	world.refreshChunk(x, z);
   }
 }

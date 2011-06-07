@@ -32,7 +32,7 @@ public class Updater {
 
 	private Logger logger = Logger.getLogger("Minecraft");
 
-	private final static String UPDATE_SITE = "http://procrafter.de/downloads/mywarp/";
+	private final static String UPDATE_SITE = "http://procrafter.de/downloads/";
 
 	private List<UpdaterFile> needsUpdating = new ArrayList<UpdaterFile>();
 
@@ -40,7 +40,7 @@ public class Updater {
 	}
 
 	public void check() {
-		String[] paths = new String[] { "lib/sqlite.jar", "lib/" + getOSSpecificFileName() };
+		String[] paths = new String[] { "lib/sqlite.jar", "lib/" + getOSSpecificFileName(), "lib/mysql-connector-java-bin.jar" };
 
 		for (String path : paths) {
 			File file = new File(path);

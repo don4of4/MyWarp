@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -38,23 +39,13 @@ public class MyWarp extends JavaPlugin {
     public void onEnable() {
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+        
+        WarpSettings.initialize(getDataFolder());
+        
+        libCheck();
+        if(!sqlCheck()) { return; }
 
-        updater = new Updater();
-        try {
-            updater.check();
-            updater.update();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        File newDatabase = new File(getDataFolder(), "warps.db");
-        File oldDatabase = new File("homes-warps.db");
-        if (!newDatabase.exists() && oldDatabase.exists()) {
-            updateFiles(oldDatabase, newDatabase);
-        }
-
-
-        Connection conn = ConnectionManager.initialize(getDataFolder());
+        Connection conn = ConnectionManager.initialize();
         if (conn == null) {
             log.log(Level.SEVERE, "[MYWARP] Could not establish SQL connection. Disabling MyWarp");
             getServer().getPluginManager().disablePlugin(this);
@@ -67,16 +58,38 @@ public class MyWarp extends JavaPlugin {
 
         WarpPermissions.initialize(getServer());
         WarpHelp.initialize(this);
-        WarpSettings.initialize(getDataFolder());
+        
+        getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT, playerListener, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
+        getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
+        if(WarpSettings.loadChunks) {
+         	// We dont need to register for teleporting if we dont want to load chunks.
+         	getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
+        }
 
-        getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT, playerListener, Priority.Low, this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.High, this);
-        getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.High, this);
-
-        log.info(name + " " + version + " enabled");
+        WarpLogger.info(name + " " + version + " enabled");
     }
 
 
+    private void libCheck(){
+        updater = new Updater();
+        try {
+            updater.check();
+            updater.update();
+        } catch (Exception e) {
+        }
+    }
+    
+    private boolean sqlCheck() {
+        Connection conn = ConnectionManager.initialize();
+        if (conn == null) {
+            WarpLogger.severe("Could not establish SQL connection. Disabling MyWarp");
+            getServer().getPluginManager().disablePlugin(this);
+            return false;
+        } 
+        return true;
+    }
+    
     private void updateFiles(File oldDatabase, File newDatabase) {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
@@ -87,7 +100,7 @@ public class MyWarp extends JavaPlugin {
         try {
             newDatabase.createNewFile();
         } catch (IOException ex) {
-            severe("Could not create new database file", ex);
+        	WarpLogger.severe("Could not create new database file", ex);
         }
         copyFile(oldDatabase, newDatabase);
     }
@@ -135,23 +148,16 @@ public class MyWarp extends JavaPlugin {
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (commandName.equals("warp")) {
-                /**
-                 * /warp convert
+            if (commandName.equals("warp") || commandName.equals("mywarp") || commandName.equals("mw")) {
+            	/**
+                 *  /warp reload
                  */
-                if (split.length == 1 && split[0].equalsIgnoreCase("convert") && WarpPermissions.isAdmin(player)) {
-                    if (!warning) {
-                        player.sendMessage(ChatColor.RED + "Warning: " + ChatColor.WHITE + "Only use a copy of warps.txt.");
-                        player.sendMessage("This will delete the warps.txt it uses");
-                        player.sendMessage("Use " + ChatColor.RED + "'/warp convert'" + ChatColor.WHITE + " again to confirm.");
-                        warning = true;
-                    } else {
-                        Converter.convert(player, getServer(), warpList);
-                        warning = false;
-                    }
-                    /**
-                     * /warp list or /warp list #
-                     */
+            	if (split.length == 1 && split[0].equalsIgnoreCase("reload") && WarpPermissions.isAdmin(player)) {
+            		WarpSettings.initialize(getDataFolder());
+            		player.sendMessage("[MyWarp] Reloading config");
+                /**
+                 * /warp list or /warp list #
+                 */
                 } else if ((split.length == 1 || (split.length == 2 && isInteger(split[1]))) && split[0].equalsIgnoreCase("list")
                         && WarpPermissions.list(player)) {
                     Lister lister = new Lister(warpList);
@@ -345,7 +351,7 @@ public class MyWarp extends JavaPlugin {
                      */
                 } else if (split.length > 2 && split[0].equalsIgnoreCase("player") && WarpPermissions.isAdmin(player)) {
                     Player invitee = getServer().getPlayer(split[1]);
-                    String inviteeName = (invitee == null) ? split[1] : invitee.getName();
+                    //String inviteeName = (invitee == null) ? split[1] : invitee.getName();
 
                     // TODO ChunkLoading
                     String name = "";

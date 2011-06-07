@@ -1,6 +1,6 @@
 package me.taylorkelly.mywarp;
 
-import ru.tehkode.permissions.bukkit.*;
+import ru.tehkode.permissions.bukkit.PermissionsEx;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import org.anjocaido.groupmanager.GroupManager;
 
@@ -13,7 +13,7 @@ import org.bukkit.plugin.Plugin;
 public class WarpPermissions {
 
     private enum PermissionHandler {
-        PERMISSIONSEX, PERMISSIONS, GROUPMANAGER, NONE
+        PERMISSIONSEX, PERMISSIONS, PERMISSIONS3, GROUPMANAGER, NONE
     }
     private static PermissionHandler handler;
     private static Plugin permissionPlugin;
@@ -35,8 +35,12 @@ public class WarpPermissions {
             WarpLogger.info("Permissions enabled using: GroupManager v" + version);
         } else if (permissions != null) {
             permissionPlugin = permissions;
-            handler = PermissionHandler.PERMISSIONS;
             String version = permissions.getDescription().getVersion();
+            if (version.contains("3.")) {
+            	handler = PermissionHandler.PERMISSIONS3;
+            } else {
+            	handler = PermissionHandler.PERMISSIONS;
+            }
             WarpLogger.info("Permissions enabled using: Permissions v" + version);
         } else {
             handler = PermissionHandler.NONE;
@@ -46,8 +50,10 @@ public class WarpPermissions {
 
     public static boolean permission(Player player, String permission, boolean defaultPerm) {
         switch (handler) {
-        	case PERMISSIONSEX:
-        		return ((PermissionsEx) permissionPlugin).getPermissionManager().has(player, permission);
+            case PERMISSIONSEX:
+                return ((PermissionsEx) permissionPlugin).getPermissionManager().has(player, permission);
+            case PERMISSIONS3:
+            	return ((Permissions) permissionPlugin).getHandler().has(player, permission);
             case PERMISSIONS:
                 return ((Permissions) permissionPlugin).getHandler().has(player, permission);
             case GROUPMANAGER:
