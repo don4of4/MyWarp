@@ -10,7 +10,7 @@ public class ConnectionManager {
         
     public static Connection initialize() {
         try {
-        	if(WarpSettings.usemySQL == true) {
+        	if(WarpSettings.usemySQL) {
         		Class.forName("com.mysql.jdbc.Driver");
         		conn = DriverManager.getConnection(WarpSettings.mySQLconn, WarpSettings.mySQLuname, WarpSettings.mySQLpass);
         		conn.setAutoCommit(false);
@@ -31,7 +31,14 @@ public class ConnectionManager {
 
     public static Connection getConnection() {
         if(conn == null) conn = initialize();
-      	return conn;
+        if(WarpSettings.usemySQL) {
+	        try {
+	        	if(!conn.isValid(10)) conn = initialize();
+	        } catch (SQLException ex) {
+	        	WarpLogger.severe("Failed to check SQL status", ex);
+	        }
+        }
+        return conn;
     }
 
     public static void closeConnection() {

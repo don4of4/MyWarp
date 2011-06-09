@@ -12,10 +12,10 @@ import org.bukkit.plugin.Plugin;
 
 public class WarpPermissions {
 
-    private enum PermissionHandler {
-        PERMISSIONSEX, PERMISSIONS, PERMISSIONS3, GROUPMANAGER, NONE
+    private enum PermissionsHandler {
+        PERMISSIONSEX, PERMISSIONS3, PERMISSIONS, GROUPMANAGER, NONE
     }
-    private static PermissionHandler handler;
+    private static PermissionsHandler handler;
     private static Plugin permissionPlugin;
 
     public static void initialize(Server server) {
@@ -25,25 +25,25 @@ public class WarpPermissions {
 
         if (permissionsEx != null) {
             permissionPlugin = permissionsEx;
-            handler = PermissionHandler.PERMISSIONSEX;
+            handler = PermissionsHandler.PERMISSIONSEX;
             String version = permissionsEx.getDescription().getVersion();
             WarpLogger.info("Permissions enabled using: PermissionsEx v" + version);
         } else if (groupManager != null) {
             permissionPlugin = groupManager;
-            handler = PermissionHandler.GROUPMANAGER;
+            handler = PermissionsHandler.GROUPMANAGER;
             String version = groupManager.getDescription().getVersion();
             WarpLogger.info("Permissions enabled using: GroupManager v" + version);
         } else if (permissions != null) {
             permissionPlugin = permissions;
             String version = permissions.getDescription().getVersion();
             if (version.contains("3.")) {
-            	handler = PermissionHandler.PERMISSIONS3;
+            	handler = PermissionsHandler.PERMISSIONS3;
             } else {
-            	handler = PermissionHandler.PERMISSIONS;
+            	handler = PermissionsHandler.PERMISSIONS;
             }
             WarpLogger.info("Permissions enabled using: Permissions v" + version);
         } else {
-            handler = PermissionHandler.NONE;
+            handler = PermissionsHandler.NONE;
             WarpLogger.warning("A permission plugin isn't loaded.");
         }
     }
