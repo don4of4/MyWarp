@@ -43,10 +43,12 @@ public class MWPlayerListener extends PlayerListener
   
   @Override
   public void onPlayerTeleport(PlayerTeleportEvent event) {
-	World world = event.getPlayer().getWorld();
-	Chunk chunk = world.getChunkAt(event.getTo());
-	int x = chunk.getX();
-	int z = chunk.getZ();
-	world.refreshChunk(x, z);
+	  if(WarpSettings.loadChunks) {
+		World world = event.getPlayer().getWorld();
+		Chunk chunk = world.getChunkAt(event.getTo());
+		int x = chunk.getX();
+		int z = chunk.getZ();
+		world.refreshChunk(x, z);
+	  }
   }
 }

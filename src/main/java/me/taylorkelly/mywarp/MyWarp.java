@@ -28,7 +28,7 @@ public class MyWarp extends JavaPlugin {
     public String name;
     public String version;
     private Updater updater;
-    public static final Logger log = Logger.getLogger("Minecraft");
+    //public static final Logger log = Logger.getLogger("Minecraft");
 
     @Override
     public void onDisable() {
@@ -47,7 +47,7 @@ public class MyWarp extends JavaPlugin {
 
         Connection conn = ConnectionManager.initialize();
         if (conn == null) {
-            log.log(Level.SEVERE, "[MYWARP] Could not establish SQL connection. Disabling MyWarp");
+        	WarpLogger.severe("Could not establish SQL connection. Disabling MyWarp");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -123,7 +123,7 @@ public class MyWarp extends JavaPlugin {
                 to.write(buffer, 0, bytesRead);
             }
         } catch (IOException ex) {
-            Logger.getLogger(MyWarp.class.getName()).log(Level.SEVERE, null, ex);
+        	WarpLogger.severe(null, ex);
         } finally {
             if (from != null) {
                 try {
@@ -451,11 +451,11 @@ public class MyWarp extends JavaPlugin {
     }
 
     public static void severe(String string, Exception ex) {
-        log.log(Level.SEVERE, "[MYHOME]" + string, ex);
+    	WarpLogger.severe("[MYHOME]" + string, ex);
 
     }
 
     public static void severe(String string) {
-        log.log(Level.SEVERE, "[MYHOME]" + string);
+    	WarpLogger.severe("[MYHOME]" + string);
     }
 }

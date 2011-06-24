@@ -12,7 +12,7 @@ public class Warp {
     public String creator;
     public String world;
     public double x;
-    public int y;
+    public double y;
     public double z;
     public int yaw;
     public int pitch;
@@ -21,7 +21,7 @@ public class Warp {
     public ArrayList<String> permissions;
     public static int nextIndex = 1;
 
-    public Warp(int index, String name, String creator, String world, double x, int y, double z, int yaw, int pitch, boolean publicAll, String permissions,
+    public Warp(int index, String name, String creator, String world, double x, double y, double z, int yaw, int pitch, boolean publicAll, String permissions,
             String welcomeMessage) {
         this.index = index;
         this.name = name;

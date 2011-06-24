@@ -1,7 +1,5 @@
 package me.taylorkelly.mywarp;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import me.taylorkelly.help.Help;
 import org.bukkit.plugin.Plugin;
 
@@ -10,7 +8,6 @@ class WarpHelp {
     public static void initialize(Plugin plugin) {
         Plugin test = plugin.getServer().getPluginManager().getPlugin("Help");
         if (test != null) {
-            Logger log = Logger.getLogger("Minecraft");
             Help helpPlugin = ((Help) test);
             helpPlugin.registerCommand("warp help", "Help for all /warp commands", plugin, true);
             helpPlugin.registerCommand("warp [name]", "Warp to [name]", plugin, "mywarp.warp.basic.warp");
@@ -29,10 +26,9 @@ class WarpHelp {
             helpPlugin.registerCommand("warp private [name]", "Make [name] a private warp", plugin, "mywarp.warp.soc.private");
             helpPlugin.registerCommand("warp convert", "Converts your warps from warps.txt", plugin, "mywarp.admin");
 
-            log.log(Level.INFO, "[MYWARP] 'Help' support enabled.");
+            WarpLogger.info("Help plugin support enabled.");
         } else {
-            Logger log = Logger.getLogger("Minecraft");
-            log.log(Level.WARNING, "[MYWARP] 'Help' isn't detected. No /help support.");
+            WarpLogger.warning("Help plugin not detected. Only providing help via /warp help.");
         }
     }
 }
