@@ -1,6 +1,14 @@
 name: MyWarp
-version: 2.0
-author: flames
+version: 2.0.1
+author: spathizilla
+authors: 
+  - flames
+  - tkelly
+softdepend:
+  - Permissions
+  - GroupManager
+  - PermissionsEx
+  - Help
 main: me.taylorkelly.mywarp.MyWarp
 commands:
   warp:
