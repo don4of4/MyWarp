@@ -2,6 +2,8 @@ package me.taylorkelly.mywarp;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.mywarp.permissions.WarpPermissions;
+
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 

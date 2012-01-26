@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.taylorkelly.mywarp.griefcraft.Updater;
+import me.taylorkelly.mywarp.permissions.WarpPermissions;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -56,7 +57,7 @@ public class MyWarp extends JavaPlugin {
         blockListener = new MWBlockListener(warpList);
         playerListener = new MWPlayerListener(warpList);
 
-        WarpPermissions.initialize(getServer());
+        WarpPermissions.initialize(this);
         WarpHelp.initialize(this);
         
         getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT, playerListener, Priority.Monitor, this);

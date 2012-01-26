@@ -18,6 +18,8 @@ public class WarpSettings {
     public static String mySQLpass;
     public static String mySQLconn;
 
+    public static boolean opPermissions;
+    
     public static void initialize(File dataFolder) {
         if(!dataFolder.exists()) {
             dataFolder.mkdirs();
@@ -37,6 +39,8 @@ public class WarpSettings {
 		mySQLconn = file.getString("mySQLconn", "jdbc:mysql://localhost:3306/minecraft", "MySQL Connection (only if using MySQL)");
 		mySQLuname = file.getString("mySQLuname", "root", "MySQL Username (only if using MySQL)");
 		mySQLpass = file.getString("mySQLpass", "password", "MySQL Password (only if using MySQL)");
+		
+		opPermissions = file.getBoolean("opPermissions", true, "Enable OP permissions with SuperPerms");
 		
         file.save();
     }

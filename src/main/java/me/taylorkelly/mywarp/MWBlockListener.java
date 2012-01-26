@@ -1,5 +1,7 @@
 package me.taylorkelly.mywarp;
 
+import me.taylorkelly.mywarp.permissions.WarpPermissions;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockListener;
