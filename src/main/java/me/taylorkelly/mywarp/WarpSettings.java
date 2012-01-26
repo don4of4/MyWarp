@@ -2,6 +2,8 @@ package me.taylorkelly.mywarp;
 
 import java.io.File;
 
+import me.taylorkelly.mywarp.utils.PropertiesFile;
+
 public class WarpSettings {
     
     private static final String settingsFile = "MyWarp.settings";

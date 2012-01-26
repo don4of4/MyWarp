@@ -1,4 +1,4 @@
-package me.taylorkelly.mywarp;
+package me.taylorkelly.mywarp.sql;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -11,6 +11,10 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import me.taylorkelly.mywarp.WarpSettings;
+import me.taylorkelly.mywarp.data.Warp;
+import me.taylorkelly.mywarp.utils.WarpLogger;
 
 public class WarpDataSource {
 	public final static String sqlitedb = "/warps.db";

@@ -1,7 +1,8 @@
-package me.taylorkelly.mywarp;
+package me.taylorkelly.mywarp.data;
 
 import java.util.ArrayList;
 
+import me.taylorkelly.mywarp.WarpSettings;
 import me.taylorkelly.mywarp.permissions.WarpPermissions;
 
 import org.bukkit.*;

@@ -1,8 +1,11 @@
-package me.taylorkelly.mywarp;
+package me.taylorkelly.mywarp.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import me.taylorkelly.mywarp.WarpSettings;
+import me.taylorkelly.mywarp.utils.WarpLogger;
 
 public class ConnectionManager {
     private static Connection conn;

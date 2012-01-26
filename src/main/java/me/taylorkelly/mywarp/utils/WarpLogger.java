@@ -1,4 +1,4 @@
-package me.taylorkelly.mywarp;
+package me.taylorkelly.mywarp.utils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
