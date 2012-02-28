@@ -27,6 +27,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MyWarp extends JavaPlugin {
@@ -37,6 +38,7 @@ public class MyWarp extends JavaPlugin {
     public String name;
     public String version;
     private Updater updater;
+    private PluginManager pm;
     public static final Logger log = Logger.getLogger("Minecraft");
 
     @Override
@@ -48,6 +50,7 @@ public class MyWarp extends JavaPlugin {
     public void onEnable() {
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
+        pm = getServer().getPluginManager();
         
         WarpSettings.initialize(getDataFolder());
         
@@ -68,14 +71,9 @@ public class MyWarp extends JavaPlugin {
         WarpPermissions.initialize(this);
         WarpHelp.initialize(this);
         
-        getServer().getPluginManager().registerEvent(Type.PLAYER_CHAT, playerListener, Priority.Monitor, this);
-        getServer().getPluginManager().registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.Monitor, this);
-        getServer().getPluginManager().registerEvent(Type.SIGN_CHANGE, blockListener, Priority.Monitor, this);
-        if(WarpSettings.loadChunks) {
-         	// We dont need to register for teleporting if we dont want to load chunks.
-         	getServer().getPluginManager().registerEvent(Event.Type.PLAYER_TELEPORT, playerListener, Priority.Monitor, this);
-        }
-
+        pm.registerEvents(blockListener, this);
+        pm.registerEvents(playerListener, this);
+        
         WarpLogger.info(name + " " + version + " enabled");
     }
 
