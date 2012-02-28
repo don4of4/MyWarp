@@ -8,7 +8,7 @@ import org.bukkit.plugin.PluginManager;
 
 public class PermissionsHandler implements IPermissionsHandler {
 	private enum PermHandler {
-		PERMISSIONSEX, PERMISSIONS3, PERMISSIONS2, GROUPMANAGER, BPERMISSIONS, SUPERPERMS, NONE
+		PERMISSIONSEX, PERMISSIONS3, PERMISSIONS2, GROUPMANAGER, BPERMISSIONS, BPERMISSIONS2, SUPERPERMS, NONE
 	}
 	private static PermHandler permplugin = PermHandler.NONE;
 	private transient IPermissionsHandler handler = new NullHandler();
@@ -45,14 +45,24 @@ public class PermissionsHandler implements IPermissionsHandler {
 
 		final Plugin bPermPlugin = pluginManager.getPlugin("bPermissions");
 		if (bPermPlugin != null && bPermPlugin.isEnabled()) {
-			if (!(handler instanceof BPermissionsHandler)) {
-				permplugin = PermHandler.BPERMISSIONS;
-				String version = bPermPlugin.getDescription().getVersion();
-				WarpLogger.info("Access Control: Using bPermissions"+ version);
-				handler = new BPermissionsHandler();
+			if (bPermPlugin.getDescription().getVersion().charAt(0) == '2') {
+				if (!(handler instanceof BPermissions2Handler)) {
+					permplugin = PermHandler.BPERMISSIONS2;
+					String version = bPermPlugin.getDescription().getVersion();
+					WarpLogger.info("Access Control: Using bPermissions"+ version);
+					handler = new BPermissions2Handler();
+				}
+			} else {
+				if (!(handler instanceof BPermissionsHandler)) {
+					permplugin = PermHandler.BPERMISSIONS;
+					String version = bPermPlugin.getDescription().getVersion();
+					WarpLogger.info("Access Control: Using bPermissions"+ version);
+					handler = new BPermissionsHandler();
+				}
 			}
 			return;
 		}
+
 
 		final Plugin GMplugin = pluginManager.getPlugin("GroupManager");
 		if (GMplugin != null && GMplugin.isEnabled()) {

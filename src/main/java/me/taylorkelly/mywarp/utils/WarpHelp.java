@@ -1,11 +1,11 @@
-package me.taylorkelly.mywarp.data;
+package me.taylorkelly.mywarp.utils;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.taylorkelly.help.Help;
 import org.bukkit.plugin.Plugin;
 
-class WarpHelp {
+public class WarpHelp {
 
     public static void initialize(Plugin plugin) {
         Plugin test = plugin.getServer().getPluginManager().getPlugin("Help");

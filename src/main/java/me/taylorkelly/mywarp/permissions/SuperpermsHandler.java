@@ -69,7 +69,6 @@ public class SuperpermsHandler implements IPermissionsHandler {
 		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.soc.uninvite", "Can uninvite people from your /warp", PermissionDefault.TRUE));
 		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.soc.public", "Allow anyone to use your /warp", PermissionDefault.TRUE));
 		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.soc.private", "Disallow anyone to use your /warp", PermissionDefault.TRUE));
-		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.soc.private", "Disallow anyone to use your /warp", PermissionDefault.TRUE));
 		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.sign.warp", "Can use sign warps", PermissionDefault.TRUE));
 		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.sign.create", "Can make sign warps", PermissionDefault.TRUE));
 		pm.addPermission(new org.bukkit.permissions.Permission("mywarp.warp.basic.createprivate", "Allowed to create private warps", PermissionDefault.TRUE));

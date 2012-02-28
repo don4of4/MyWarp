@@ -5,9 +5,6 @@ authors:
   - flames
   - tkelly
 softdepend:
-  - Permissions
-  - GroupManager
-  - PermissionsEx
   - Help
 main: me.taylorkelly.mywarp.MyWarp
 commands:
