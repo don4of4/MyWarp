@@ -6,11 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.taylorkelly.mywarp.data.Lister;
 import me.taylorkelly.mywarp.data.Searcher;
+import me.taylorkelly.mywarp.data.Warp;
 import me.taylorkelly.mywarp.data.WarpList;
 import me.taylorkelly.mywarp.griefcraft.Updater;
 import me.taylorkelly.mywarp.listeners.MWBlockListener;
@@ -20,6 +22,7 @@ import me.taylorkelly.mywarp.sql.ConnectionManager;
 import me.taylorkelly.mywarp.utils.WarpHelp;
 import me.taylorkelly.mywarp.utils.WarpLogger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -432,7 +435,40 @@ public class MyWarp extends JavaPlugin {
                 }
                 return true;
             }
+        } else {
+            if (commandName.equals("warp") || commandName.equals("mywarp") || commandName.equals("mw")) {
+                if (args.length > 0 && args[0].equalsIgnoreCase("validate")) {
+                    List<Warp> warps = warpList.getAllWarps();
+
+                    for (Player players : Bukkit.getServer().getOnlinePlayers()) {
+                        Integer maxPuWarps = WarpPermissions.maxPublicWarps(players);
+                        Integer maxPrWarps = WarpPermissions.maxPrivateWarps(players);
+
+                        Integer warpCount = 0;
+
+                        for (Warp warp : warps) {
+                            if (warp.publicAll) {
+                                if (warpCount.equals(maxPuWarps) || warpCount > maxPuWarps) {
+                                    warpList.deleteWarp(warp.name);
+                                    continue;
+                                }
+                            } else {
+                                if (warpCount.equals(maxPrWarps) || warpCount > maxPrWarps) {
+                                    warpList.deleteWarp(warp.name);
+                                    continue;
+                                }
+                            }
+
+                            if (warp.creator.equalsIgnoreCase(players.getName()))
+                                warpCount++;
+                        }
+                    }
+
+                    return true;
+                }
+            }
         }
+
         return false;
     }
 

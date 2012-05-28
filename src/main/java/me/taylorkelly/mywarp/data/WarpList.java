@@ -131,6 +131,15 @@ public class WarpList {
         }
     }
 
+    public void deleteWarp(String name) {
+        if (warpList.containsKey(name)) {
+            Warp warp = warpList.get(name);
+
+            warpList.remove(name);
+            WarpDataSource.deleteWarp(warp);
+        }
+    }
+
     public void privatize(String name, Player player) {
         MatchList matches = this.getMatches(name, player);
         name = matches.getMatch(name);
@@ -252,6 +261,15 @@ public class WarpList {
         return ret;
     }
 
+    public List<Warp> getAllWarps() {
+        List<Warp> warps = new ArrayList<Warp>();
+
+        for (Warp warp : warpList.values())
+            warps.add(warp);
+
+        return warps;
+    }
+
     public int getSize() {
         return warpList.size();
     }
@@ -275,6 +293,7 @@ public class WarpList {
                 }
             }
         }
+
         if (exactMatches.size() > 1) {
             for (int i = 0; i < exactMatches.size(); i++) {
                 Warp warp = exactMatches.get(i);
@@ -285,6 +304,7 @@ public class WarpList {
                 }
             }
         }
+
         return new MatchList(exactMatches, matches);
     }
 
@@ -313,7 +333,7 @@ public class WarpList {
         }
     }
 
-    public double getMaxWarps(Player player) {
+    public int getMaxWarps(Player player) {
         int count = 0;
         for (Warp warp : warpList.values()) {
             if (warp.playerCanWarp(player)) {
