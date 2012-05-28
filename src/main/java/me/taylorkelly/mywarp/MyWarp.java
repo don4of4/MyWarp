@@ -184,6 +184,28 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp search <name>
                      */
+                } else if (args.length > 0 && args[0].equalsIgnoreCase("stats")) {
+                    Integer maxPubWarps = WarpPermissions.maxPublicWarps(player);
+                    Integer maxPrivWarps = WarpPermissions.maxPrivateWarps(player);
+
+                    Integer pubWarps = 0;
+                    Integer privWarps = 0;
+
+                    for (Warp warp : warpList.getAllWarps()) {
+                        if (!warp.creator.equalsIgnoreCase(player.getName()))
+                            continue;
+
+                        if (warp.publicAll) {
+                            pubWarps++;
+                        } else {
+                            privWarps++;
+                        }
+                    }
+
+                    player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "YOUR" + ChatColor.RED + " --------------------");
+                    player.sendMessage(ChatColor.RED + "Private Warps: " + ChatColor.WHITE + privWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPrivWarps);
+                    player.sendMessage(ChatColor.RED + "Public Warps: " + ChatColor.WHITE + pubWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPubWarps);
+                    player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "WARPS" + ChatColor.RED + " --------------------");
                 } else if (args.length > 1 && args[0].equalsIgnoreCase("search") && WarpPermissions.search(player)) {
                     String name = "";
                     for (int i = 1; i < args.length; i++) {
@@ -433,6 +455,7 @@ public class MyWarp extends JavaPlugin {
                 } else {
                     return false;
                 }
+
                 return true;
             }
         } else {
@@ -448,12 +471,12 @@ public class MyWarp extends JavaPlugin {
 
                         for (Warp warp : warps) {
                             if (warp.publicAll) {
-                                if (warpCount.equals(maxPuWarps) || warpCount > maxPuWarps) {
+                                if (warpCount >= maxPuWarps) {
                                     warpList.deleteWarp(warp.name);
                                     continue;
                                 }
                             } else {
-                                if (warpCount.equals(maxPrWarps) || warpCount > maxPrWarps) {
+                                if (warpCount >= maxPrWarps) {
                                     warpList.deleteWarp(warp.name);
                                     continue;
                                 }
