@@ -21,12 +21,12 @@ public class PermissionsHandler implements IPermissionsHandler {
     }
 
     @Override
-    public boolean hasPermission(final Player player, final String node, boolean defaultPerm) {
+    public boolean hasPermission(Player player, String node, boolean defaultPerm) {
         return handler.hasPermission(player, node, defaultPerm);
     }
 
     @Override
-    public int getInteger(final Player player, final String node, int defaultInt) {
+    public int getInteger(Player player, String node, int defaultInt) {
         return handler.getInteger(player, node, defaultInt);
     }
 

@@ -65,6 +65,7 @@ public class WarpPermissions {
     }
 
     public static boolean privateCreate(Player player) {
+
         return permissionsHandler.hasPermission(player, "mywarp.warp.basic.createprivate", false);
     }
 
@@ -76,11 +77,39 @@ public class WarpPermissions {
         return permissionsHandler.hasPermission(player, "mywarp.warp.basic.compass", false);
     }
 
-    public static int maxPrivateWarps() {
+    public static int maxPrivateWarps(Player player) {
+        if (permissionsHandler.hasPermission(player, "mywarp.private.limit.unlimited", false)) {
+            return 9999999;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.private.limit.100", false)) {
+            return 100;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.private.limit.50", false)) {
+            return 50;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.private.limit.25", false)) {
+            return 25;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.private.limit.15", false)) {
+            return 15;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.private.limit.10", false)) {
+            return 10;
+        }
+
         return WarpSettings.maxPrivate;
     }
 
-    public static int maxPublicWarps() {
+    public static int maxPublicWarps(Player player) {
+        if (permissionsHandler.hasPermission(player, "mywarp.public.limit.unlimited", false)) {
+            return 9999999;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.public.limit.100", false)) {
+            return 100;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.public.limit.50", false)) {
+            return 50;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.public.limit.25", false)) {
+            return 25;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.public.limit.15", false)) {
+            return 15;
+        } else if (permissionsHandler.hasPermission(player, "mywarp.public.limit.10", false)) {
+            return 10;
+        }
+
         return WarpSettings.maxPublic;
     }
 

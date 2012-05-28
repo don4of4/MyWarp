@@ -8,8 +8,9 @@ public class NullHandler implements IPermissionsHandler {
 	public boolean hasPermission(final Player player, final String node, boolean defaultPerm) {
 		return false;
 	}
-	
-	public int getInteger(final Player player, final String node, int defaultInt) {
+
+    @Override
+    public int getInteger(final Player player, final String node, int defaultInt) {
 		return defaultInt;
 	}
 }
