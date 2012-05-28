@@ -361,7 +361,7 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp help
                      */
-                } else if (args.length == 1 && args[0].equalsIgnoreCase("help")) {
+                } else if (args.length == 1 && args[0].equalsIgnoreCase("help") || args.length == 0) {
                     ArrayList<String> messages = new ArrayList<String>();
                     messages.add(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "/WARP HELP" + ChatColor.RED + " --------------------");
                     if (WarpPermissions.warp(player)) {
