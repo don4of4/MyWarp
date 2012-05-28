@@ -38,7 +38,7 @@ public class WarpList {
                 player.sendMessage("Use: " + ChatColor.RED + "/warp private " + name);
             }
         } else {
-            player.sendMessage(ChatColor.RED + "You have reached your max # of public warps " + ChatColor.YELLOW + "(" + WarpPermissions.maxPublicWarps(player)
+            player.sendMessage(ChatColor.RED + "You have reached your max # of public warps " + ChatColor.YELLOW + "(" + WarpPermissions.maxPublicWarps()
                     + ")");
             player.sendMessage("Delete some of your warps to make more");
         }
@@ -56,19 +56,11 @@ public class WarpList {
     }
 
     private boolean playerCanBuildPublicWarp(Player player) {
-        if(WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits) {
-            return true;
-        } else{
-            return numPublicWarpsPlayer(player) < WarpPermissions.maxPublicWarps(player);
-        }
+        return WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits || numPublicWarpsPlayer(player) < WarpPermissions.maxPublicWarps();
     }
 
     private boolean playerCanBuildPrivateWarp(Player player) {
-        if(WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits) {
-            return true;
-        } else{
-            return numPrivateWarpsPlayer(player) < WarpPermissions.maxPrivateWarps(player);
-        }
+        return WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits || numPrivateWarpsPlayer(player) < WarpPermissions.maxPrivateWarps();
     }
 
 
@@ -86,7 +78,7 @@ public class WarpList {
             }
         } else {
             player.sendMessage(ChatColor.RED + "You have reached your max # of private warps " + ChatColor.YELLOW + "("
-                    + WarpPermissions.maxPrivateWarps(player) + ")");
+                    + WarpPermissions.maxPrivateWarps() + ")");
             player.sendMessage("Delete some of your warps to make more");
         }
     }
@@ -273,8 +265,7 @@ public class WarpList {
         collator.setStrength(Collator.SECONDARY);
         Collections.sort(names, collator);
 
-        for (int i = 0; i < names.size(); i++) {
-            String currName = names.get(i);
+        for (String currName : names) {
             Warp warp = warpList.get(currName);
             if (warp.playerCanWarp(player)) {
                 if (warp.name.equalsIgnoreCase(name)) {
