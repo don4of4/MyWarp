@@ -188,6 +188,9 @@ public class MyWarp extends JavaPlugin {
                     Integer maxPubWarps = WarpPermissions.maxPublicWarps(player);
                     Integer maxPrivWarps = WarpPermissions.maxPrivateWarps(player);
 
+                    ArrayList<String> puWarps = new ArrayList<String>();
+                    ArrayList<String> prWarps = new ArrayList<String>();
+
                     Integer pubWarps = 0;
                     Integer privWarps = 0;
 
@@ -196,16 +199,35 @@ public class MyWarp extends JavaPlugin {
                             continue;
 
                         if (warp.publicAll) {
+                            puWarps.add(warp.name);
                             pubWarps++;
                         } else {
+                            prWarps.add(warp.name);
                             privWarps++;
                         }
                     }
 
-                    player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "YOUR" + ChatColor.RED + " --------------------");
+                    String upWarps = "";
+                    String rpWarps = "";
+
+                    for (String warp : puWarps) {
+                        upWarps += warp + ", ";
+                    }
+
+                    for (String warp : prWarps) {
+                        rpWarps += warp + ", ";
+                    }
+
+                    upWarps = upWarps.trim();
+                    rpWarps = rpWarps.trim();
+
+
+                    player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "YOUR WARPS" + ChatColor.RED + " --------------------");
                     player.sendMessage(ChatColor.RED + "Private Warps: " + ChatColor.WHITE + privWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPrivWarps);
+                    player.sendMessage(ChatColor.RED + "Private Warps List: " + ChatColor.WHITE + rpWarps);
                     player.sendMessage(ChatColor.RED + "Public Warps: " + ChatColor.WHITE + pubWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPubWarps);
-                    player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "WARPS" + ChatColor.RED + " --------------------");
+                    player.sendMessage(ChatColor.RED + "Public Warps List: " + ChatColor.WHITE + upWarps);
+                    player.sendMessage(ChatColor.RED + "--------------------       --------------------");
                 } else if (args.length > 1 && args[0].equalsIgnoreCase("search") && WarpPermissions.search(player)) {
                     String name = "";
                     for (int i = 1; i < args.length; i++) {
@@ -467,25 +489,32 @@ public class MyWarp extends JavaPlugin {
                         Integer maxPuWarps = WarpPermissions.maxPublicWarps(players);
                         Integer maxPrWarps = WarpPermissions.maxPrivateWarps(players);
 
-                        Integer warpCount = 0;
+                        Integer puWarpCount = 0;
+                        Integer prWarpCount = 0;
 
                         for (Warp warp : warps) {
-                            if (warp.publicAll) {
-                                if (warpCount >= maxPuWarps) {
-                                    warpList.deleteWarp(warp.name);
-                                    continue;
-                                }
-                            } else {
-                                if (warpCount >= maxPrWarps) {
-                                    warpList.deleteWarp(warp.name);
-                                    continue;
-                                }
-                            }
+                            if (!warp.creator.equalsIgnoreCase(players.getName()))
+                                continue;
 
-                            if (warp.creator.equalsIgnoreCase(players.getName()))
-                                warpCount++;
+                            if (warp.publicAll) {
+                                if (puWarpCount > maxPuWarps) {
+                                    warpList.deleteWarp(warp.name);
+                                    continue;
+                                }
+
+                                puWarpCount++;
+                            } else {
+                                if (prWarpCount > maxPrWarps) {
+                                    warpList.deleteWarp(warp.name);
+                                    continue;
+                                }
+
+                                prWarpCount++;
+                            }
                         }
                     }
+
+                    sender.sendMessage(ChatColor.RED + "Warps Validated.");
 
                     return true;
                 }
