@@ -1,82 +1,95 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>me.taylorkelly.mywarp</groupId>
-  <artifactId>MyWarp</artifactId>
-  <name>MyWarp</name>
-  <version>2.2</version>
-  <url>http://www.bukkit.org</url>
-  <dependencies>
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>bukkit</artifactId>
-      <version>1.1-R2-SNAPSHOT</version>
-      <type>jar</type>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-        <groupId>me.taylorkelly.help</groupId>
-        <artifactId>Help</artifactId>
-        <version>0.2</version>
-    </dependency>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>me.taylorkelly.mywarp</groupId>
+    <artifactId>MyWarp</artifactId>
+    <version>${m.version}-${p.version}</version>
+    <name>MyWarp</name>
+    <url>http://mDev.in/</url>
+    <description>Warp Plugin</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <build.number>Unknown</build.number>
+        <m.version>1.2.5</m.version>
+        <p.version>R0.6</p.version>
+    </properties>
+
+    <!-- Repository locations -->
+    <repositories>
+        <repository>
+            <id>bukkit-repo</id>
+            <url>http://repo.bukkit.org/content/groups/public</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>mDev-repo</id>
+            <url>http://repo.mdev.in</url>
+            <releases>
+                <updatePolicy>always</updatePolicy>
+            </releases>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <build>
+        <defaultGoal>clean install</defaultGoal>
+        <!-- Resources -->
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <filtering>true</filtering>
+                <directory>${basedir}/src/main/resources/</directory>
+                <includes>
+                    <include>*.yml</include>
+                </includes>
+            </resource>
+        </resources>
+        <!-- Plugins -->
+        <plugins>
+            <!-- Compile plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3.2</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+            <!-- JAR creation plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
         <dependency>
-        <groupId>ru.tehkode.permissions.bukkit</groupId>
-        <artifactId>PermissionsEx</artifactId>
-        <version>1.14</version>
-    </dependency>
-	<dependency>
-        <groupId>com.nijikokun.bukkit</groupId>
-        <artifactId>Permissions</artifactId>
-        <version>[2.5.5,],[3.1.6,]</version>
-    </dependency>
-    <dependency>
-        <groupId>org.anjocaido</groupId>
-        <artifactId>GroupManager</artifactId>
-        <version>[1.0-alpha-5],[1.1]</version>
-    </dependency>
-    <dependency>
-    	<groupId>de.bananaco.permissions.Permissions</groupId>
-    	<artifactId>bPermissions</artifactId>
-    	<version>1.7.9.9</version>
-    </dependency>
-    <dependency>
-    	<groupId>de.bananaco.bpermissions.imp.Permissions</groupId>
-    	<artifactId>bPermissions</artifactId>
-    	<version>2.9.0</version>
-    </dependency>
-  </dependencies>
-  <build>
-    <finalName>${project.name}</finalName>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-	  <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>2.4.3</version>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.3.1</version>
-        <configuration>
-        	<archive>
-        		<manifestEntries>
-                	<Class-Path>../lib/sqlite.jar ../lib/mysql-connector-java-bin.jar</Class-Path>
-          		</manifestEntries>
-        	</archive>
-      	</configuration>
-      </plugin>
-    </plugins>
-  </build>
+            <groupId>org.bukkit</groupId>
+            <artifactId>bukkit</artifactId>
+            <version>1.2.5-R3.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.milkbowl.vault</groupId>
+            <artifactId>Vault</artifactId>
+            <version>1.2.14-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 </project>

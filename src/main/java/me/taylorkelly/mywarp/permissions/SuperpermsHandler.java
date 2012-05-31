@@ -47,7 +47,7 @@ public class SuperpermsHandler implements IPermissionsHandler {
 		}
 		return defaultInt;
 	}
-	
+
 	private static void registerPermissions() {
 		registerAdminPerms();
 		registerUserPerms();
