@@ -6,11 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import me.taylorkelly.mywarp.data.Lister;
 import me.taylorkelly.mywarp.data.Searcher;
+import me.taylorkelly.mywarp.data.Warp;
 import me.taylorkelly.mywarp.data.WarpList;
 import me.taylorkelly.mywarp.griefcraft.Updater;
 import me.taylorkelly.mywarp.listeners.MWBlockListener;
@@ -20,25 +22,19 @@ import me.taylorkelly.mywarp.sql.ConnectionManager;
 import me.taylorkelly.mywarp.utils.WarpHelp;
 import me.taylorkelly.mywarp.utils.WarpLogger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MyWarp extends JavaPlugin {
 
     private WarpList warpList;
-    private MWPlayerListener playerListener;
-    private MWBlockListener blockListener;
     public String name;
     public String version;
-    private Updater updater;
-    private PluginManager pm;
     public static final Logger log = Logger.getLogger("Minecraft");
 
     @Override
@@ -50,7 +46,7 @@ public class MyWarp extends JavaPlugin {
     public void onEnable() {
         name = this.getDescription().getName();
         version = this.getDescription().getVersion();
-        pm = getServer().getPluginManager();
+        PluginManager pm = getServer().getPluginManager();
         
         WarpSettings.initialize(getDataFolder());
         
@@ -65,8 +61,8 @@ public class MyWarp extends JavaPlugin {
         }
 
         warpList = new WarpList(getServer());
-        blockListener = new MWBlockListener(warpList);
-        playerListener = new MWPlayerListener(warpList);
+        MWBlockListener blockListener = new MWBlockListener(warpList);
+        MWPlayerListener playerListener = new MWPlayerListener(warpList);
 
         WarpPermissions.initialize(this);
         WarpHelp.initialize(this);
@@ -79,12 +75,11 @@ public class MyWarp extends JavaPlugin {
 
 
     private void libCheck(){
-        updater = new Updater();
+        Updater updater = new Updater();
         try {
             updater.check();
             updater.update();
-        } catch (Exception e) {
-        }
+        } catch (Exception ignored) {}
     }
     
     private boolean sqlCheck() {
@@ -98,17 +93,18 @@ public class MyWarp extends JavaPlugin {
     }
     
     private void updateFiles(File oldDatabase, File newDatabase) {
-        if (!getDataFolder().exists()) {
+        if (!getDataFolder().exists())
             getDataFolder().mkdirs();
-        }
-        if (newDatabase.exists()) {
+
+        if (newDatabase.exists())
             newDatabase.delete();
-        }
+
         try {
             newDatabase.createNewFile();
         } catch (IOException ex) {
         	WarpLogger.severe("Could not create new database file", ex);
         }
+
         copyFile(oldDatabase, newDatabase);
     }
 
@@ -135,22 +131,17 @@ public class MyWarp extends JavaPlugin {
             if (from != null) {
                 try {
                     from.close();
-                } catch (IOException e) {
-                }
+                } catch (IOException ignored) {}
             }
             if (to != null) {
                 try {
                     to.close();
-                } catch (IOException e) {
-                }
+                } catch (IOException ignored) {}
             }
         }
     }
-    
-    private boolean warning;
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        String[] split = args;
         String commandName = command.getName().toLowerCase();
 
         if (sender instanceof Player) {
@@ -159,19 +150,19 @@ public class MyWarp extends JavaPlugin {
             	/**
                  *  /warp reload
                  */
-            	if (split.length == 1 && split[0].equalsIgnoreCase("reload") && WarpPermissions.isAdmin(player)) {
+            	if (args.length == 1 && args[0].equalsIgnoreCase("reload") && WarpPermissions.isAdmin(player)) {
             		WarpSettings.initialize(getDataFolder());
             		player.sendMessage("[MyWarp] Reloading config");
                 /**
                  * /warp list or /warp list #
                  */
-                } else if ((split.length == 1 || (split.length == 2 && isInteger(split[1]))) && split[0].equalsIgnoreCase("list")
+                } else if ((args.length == 1 || (args.length == 2 && isInteger(args[1]))) && args[0].equalsIgnoreCase("list")
                         && WarpPermissions.list(player)) {
                     Lister lister = new Lister(warpList);
                     lister.addPlayer(player);
 
-                    if (split.length == 2) {
-                        int page = Integer.parseInt(split[1]);
+                    if (args.length == 2) {
+                        int page = Integer.parseInt(args[1]);
                         if (page < 1) {
                             player.sendMessage(ChatColor.RED + "Page number can't be below 1.");
                             return true;
@@ -188,16 +179,60 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp slist
                      */
-                } else if (split.length == 1 && split[0].equalsIgnoreCase("slist") && WarpPermissions.list(player)) {
+                } else if (args.length == 1 && args[0].equalsIgnoreCase("slist") && WarpPermissions.list(player)) {
                     warpList.list(player);
                     /**
                      * /warp search <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("search") && WarpPermissions.search(player)) {
+                } else if (args.length > 0 && args[0].equalsIgnoreCase("stats")) {
+                    Integer maxPubWarps = WarpPermissions.maxPublicWarps(player);
+                    Integer maxPrivWarps = WarpPermissions.maxPrivateWarps(player);
+
+                    ArrayList<String> puWarps = new ArrayList<String>();
+                    ArrayList<String> prWarps = new ArrayList<String>();
+
+                    Integer pubWarps = 0;
+                    Integer privWarps = 0;
+
+                    for (Warp warp : warpList.getAllWarps()) {
+                        if (!warp.creator.equalsIgnoreCase(player.getName()))
+                            continue;
+
+                        if (warp.publicAll) {
+                            puWarps.add(warp.name);
+                            pubWarps++;
+                        } else {
+                            prWarps.add(warp.name);
+                            privWarps++;
+                        }
+                    }
+
+                    String upWarps = "";
+                    String rpWarps = "";
+
+                    for (String warp : puWarps) {
+                        upWarps += warp + ", ";
+                    }
+
+                    for (String warp : prWarps) {
+                        rpWarps += warp + ", ";
+                    }
+
+                    upWarps = upWarps.trim();
+                    rpWarps = rpWarps.trim();
+
+
+                    player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "YOUR WARPS" + ChatColor.RED + " --------------------");
+                    player.sendMessage(ChatColor.RED + "Private Warps: " + ChatColor.WHITE + privWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPrivWarps);
+                    player.sendMessage(ChatColor.RED + "Private Warps List: " + ChatColor.WHITE + rpWarps);
+                    player.sendMessage(ChatColor.RED + "Public Warps: " + ChatColor.WHITE + pubWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPubWarps);
+                    player.sendMessage(ChatColor.RED + "Public Warps List: " + ChatColor.WHITE + upWarps);
+                    player.sendMessage(ChatColor.RED + "--------------------       --------------------");
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("search") && WarpPermissions.search(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -209,12 +244,12 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp create <name>
                      */
-                } else if (split.length > 1 && (split[0].equalsIgnoreCase("create") || split[0].equalsIgnoreCase("set"))
+                } else if (args.length > 1 && (args[0].equalsIgnoreCase("create") || args[0].equalsIgnoreCase("set"))
                         && (WarpPermissions.publicCreate(player) || WarpPermissions.privateCreate(player))) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -226,11 +261,11 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp point <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("point") && WarpPermissions.compass(player)) {
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("point") && WarpPermissions.compass(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -238,11 +273,11 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp pcreate <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("pcreate") && WarpPermissions.privateCreate(player)) {
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("pcreate") && WarpPermissions.privateCreate(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -251,11 +286,11 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp delete <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("delete") && WarpPermissions.delete(player)) {
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("delete") && WarpPermissions.delete(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -264,11 +299,11 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp welcome <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("welcome") && WarpPermissions.welcome(player)) {
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("welcome") && WarpPermissions.welcome(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -277,11 +312,11 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp private <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("private") && WarpPermissions.canPrivate(player)) {
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("private") && WarpPermissions.canPrivate(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -290,11 +325,11 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp public <name>
                      */
-                } else if (split.length > 1 && split[0].equalsIgnoreCase("public") && WarpPermissions.canPublic(player)) {
+                } else if (args.length > 1 && args[0].equalsIgnoreCase("public") && WarpPermissions.canPublic(player)) {
                     String name = "";
-                    for (int i = 1; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 1; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -304,15 +339,15 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp give <player> <name>
                      */
-                } else if (split.length > 2 && split[0].equalsIgnoreCase("give") && WarpPermissions.give(player)) {
-                    Player givee = getServer().getPlayer(split[1]);
+                } else if (args.length > 2 && args[0].equalsIgnoreCase("give") && WarpPermissions.give(player)) {
+                    Player givee = getServer().getPlayer(args[1]);
                     // TODO Change to matchPlayer
-                    String giveeName = (givee == null) ? split[1] : givee.getName();
+                    String giveeName = (givee == null) ? args[1] : givee.getName();
 
                     String name = "";
-                    for (int i = 2; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 2; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -322,15 +357,15 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp invite <player> <name>
                      */
-                } else if (split.length > 2 && split[0].equalsIgnoreCase("invite") && WarpPermissions.invite(player)) {
-                    Player invitee = getServer().getPlayer(split[1]);
+                } else if (args.length > 2 && args[0].equalsIgnoreCase("invite") && WarpPermissions.invite(player)) {
+                    Player invitee = getServer().getPlayer(args[1]);
                     // TODO Change to matchPlayer
-                    String inviteeName = (invitee == null) ? split[1] : invitee.getName();
+                    String inviteeName = (invitee == null) ? args[1] : invitee.getName();
 
                     String name = "";
-                    for (int i = 2; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 2; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -339,14 +374,14 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp uninvite <player> <name>
                      */
-                } else if (split.length > 2 && split[0].equalsIgnoreCase("uninvite") && WarpPermissions.uninvite(player)) {
-                    Player invitee = getServer().getPlayer(split[1]);
-                    String inviteeName = (invitee == null) ? split[1] : invitee.getName();
+                } else if (args.length > 2 && args[0].equalsIgnoreCase("uninvite") && WarpPermissions.uninvite(player)) {
+                    Player invitee = getServer().getPlayer(args[1]);
+                    String inviteeName = (invitee == null) ? args[1] : invitee.getName();
 
                     String name = "";
-                    for (int i = 2; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 2; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -356,15 +391,15 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp player <player> <name>
                      */
-                } else if (split.length > 2 && split[0].equalsIgnoreCase("player") && WarpPermissions.isAdmin(player)) {
-                    Player invitee = getServer().getPlayer(split[1]);
+                } else if (args.length > 2 && args[0].equalsIgnoreCase("player") && WarpPermissions.isAdmin(player)) {
+                    Player invitee = getServer().getPlayer(args[1]);
                     //String inviteeName = (invitee == null) ? split[1] : invitee.getName();
 
                     // TODO ChunkLoading
                     String name = "";
-                    for (int i = 2; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 2; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -373,7 +408,7 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp help
                      */
-                } else if (split.length == 1 && split[0].equalsIgnoreCase("help")) {
+                } else if (args.length == 1 && args[0].equalsIgnoreCase("help") || args.length == 0) {
                     ArrayList<String> messages = new ArrayList<String>();
                     messages.add(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "/WARP HELP" + ChatColor.RED + " --------------------");
                     if (WarpPermissions.warp(player)) {
@@ -429,12 +464,12 @@ public class MyWarp extends JavaPlugin {
                     /**
                      * /warp <name>
                      */
-                } else if (split.length > 0 && WarpPermissions.warp(player)) {
+                } else if (args.length > 0 && WarpPermissions.warp(player)) {
                     // TODO ChunkLoading
                     String name = "";
-                    for (int i = 0; i < split.length; i++) {
-                        name += split[i];
-                        if (i + 1 < split.length) {
+                    for (int i = 0; i < args.length; i++) {
+                        name += args[i];
+                        if (i + 1 < args.length) {
                             name += " ";
                         }
                     }
@@ -442,9 +477,50 @@ public class MyWarp extends JavaPlugin {
                 } else {
                     return false;
                 }
+
                 return true;
             }
+        } else {
+            if (commandName.equals("warp") || commandName.equals("mywarp") || commandName.equals("mw")) {
+                if (args.length > 0 && args[0].equalsIgnoreCase("validate")) {
+                    List<Warp> warps = warpList.getAllWarps();
+
+                    for (Player players : Bukkit.getServer().getOnlinePlayers()) {
+                        Integer maxPuWarps = WarpPermissions.maxPublicWarps(players);
+                        Integer maxPrWarps = WarpPermissions.maxPrivateWarps(players);
+
+                        Integer puWarpCount = 0;
+                        Integer prWarpCount = 0;
+
+                        for (Warp warp : warps) {
+                            if (!warp.creator.equalsIgnoreCase(players.getName()))
+                                continue;
+
+                            if (warp.publicAll) {
+                                if (puWarpCount > maxPuWarps) {
+                                    warpList.deleteWarp(warp.name);
+                                    continue;
+                                }
+
+                                puWarpCount++;
+                            } else {
+                                if (prWarpCount > maxPrWarps) {
+                                    warpList.deleteWarp(warp.name);
+                                    continue;
+                                }
+
+                                prWarpCount++;
+                            }
+                        }
+                    }
+
+                    sender.sendMessage(ChatColor.RED + "Warps Validated.");
+
+                    return true;
+                }
+            }
         }
+
         return false;
     }
 

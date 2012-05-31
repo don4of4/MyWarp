@@ -56,19 +56,11 @@ public class WarpList {
     }
 
     private boolean playerCanBuildPublicWarp(Player player) {
-        if(WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits) {
-            return true;
-        } else{
-            return numPublicWarpsPlayer(player) < WarpPermissions.maxPublicWarps(player);
-        }
+        return WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits || numPublicWarpsPlayer(player) < WarpPermissions.maxPublicWarps(player);
     }
 
     private boolean playerCanBuildPrivateWarp(Player player) {
-        if(WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits) {
-            return true;
-        } else{
-            return numPrivateWarpsPlayer(player) < WarpPermissions.maxPrivateWarps(player);
-        }
+        return WarpPermissions.isAdmin(player) && !WarpSettings.adminsObeyLimits || numPrivateWarpsPlayer(player) < WarpPermissions.maxPrivateWarps(player);
     }
 
 
@@ -136,6 +128,15 @@ public class WarpList {
             }
         } else {
             player.sendMessage(ChatColor.RED + "No such warp '" + name + "'");
+        }
+    }
+
+    public void deleteWarp(String name) {
+        if (warpList.containsKey(name)) {
+            Warp warp = warpList.get(name);
+
+            warpList.remove(name);
+            WarpDataSource.deleteWarp(warp);
         }
     }
 
@@ -260,6 +261,15 @@ public class WarpList {
         return ret;
     }
 
+    public List<Warp> getAllWarps() {
+        List<Warp> warps = new ArrayList<Warp>();
+
+        for (Warp warp : warpList.values())
+            warps.add(warp);
+
+        return warps;
+    }
+
     public int getSize() {
         return warpList.size();
     }
@@ -273,8 +283,7 @@ public class WarpList {
         collator.setStrength(Collator.SECONDARY);
         Collections.sort(names, collator);
 
-        for (int i = 0; i < names.size(); i++) {
-            String currName = names.get(i);
+        for (String currName : names) {
             Warp warp = warpList.get(currName);
             if (warp.playerCanWarp(player)) {
                 if (warp.name.equalsIgnoreCase(name)) {
@@ -284,6 +293,7 @@ public class WarpList {
                 }
             }
         }
+
         if (exactMatches.size() > 1) {
             for (int i = 0; i < exactMatches.size(); i++) {
                 Warp warp = exactMatches.get(i);
@@ -294,6 +304,7 @@ public class WarpList {
                 }
             }
         }
+
         return new MatchList(exactMatches, matches);
     }
 
@@ -322,7 +333,7 @@ public class WarpList {
         }
     }
 
-    public double getMaxWarps(Player player) {
+    public int getMaxWarps(Player player) {
         int count = 0;
         for (Warp warp : warpList.values()) {
             if (warp.playerCanWarp(player)) {
