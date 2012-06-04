@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.number>Unknown</build.number>
         <m.version>1.2.5</m.version>
-        <p.version>R0.7</p.version>
+        <p.version>R0.8</p.version>
     </properties>
 
     <!-- Repository locations -->

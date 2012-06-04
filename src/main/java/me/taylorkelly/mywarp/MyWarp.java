@@ -473,6 +473,9 @@ public class MyWarp extends JavaPlugin {
                 if (args.length > 0 && args[0].equalsIgnoreCase("validate")) {
                     List<Warp> warps = warpList.getAllWarps();
 
+                    Integer prWarp = 0;
+                    Integer puWarp = 0;
+
                     for (Player players : Bukkit.getServer().getOnlinePlayers()) {
                         Integer maxPuWarps = WarpPermissions.maxPublicWarps(players);
                         Integer maxPrWarps = WarpPermissions.maxPrivateWarps(players);
@@ -487,6 +490,7 @@ public class MyWarp extends JavaPlugin {
                             if (warp.publicAll) {
                                 if (puWarpCount > maxPuWarps) {
                                     warpList.deleteWarp(warp.name);
+                                    puWarp++;
                                     continue;
                                 }
 
@@ -494,6 +498,7 @@ public class MyWarp extends JavaPlugin {
                             } else {
                                 if (prWarpCount > maxPrWarps) {
                                     warpList.deleteWarp(warp.name);
+                                    prWarp++;
                                     continue;
                                 }
 
@@ -502,7 +507,7 @@ public class MyWarp extends JavaPlugin {
                         }
                     }
 
-                    sender.sendMessage(ChatColor.RED + "Warps Validated.");
+                    sender.sendMessage(ChatColor.RED + "Warps Validated. " + puWarp + " Public Warps Deleted. " + prWarp + " Private Warps Deleted.");
 
                     return true;
                 }
