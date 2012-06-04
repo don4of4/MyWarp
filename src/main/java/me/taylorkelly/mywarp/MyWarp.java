@@ -188,8 +188,8 @@ public class MyWarp extends JavaPlugin {
                     Integer maxPubWarps = WarpPermissions.maxPublicWarps(player);
                     Integer maxPrivWarps = WarpPermissions.maxPrivateWarps(player);
 
-                    ArrayList<String> puWarps = new ArrayList<String>();
-                    ArrayList<String> prWarps = new ArrayList<String>();
+                    String puWarps = "";
+                    String prWarps = "";
 
                     Integer pubWarps = 0;
                     Integer privWarps = 0;
@@ -199,34 +199,22 @@ public class MyWarp extends JavaPlugin {
                             continue;
 
                         if (warp.publicAll) {
-                            puWarps.add(warp.name);
+                            puWarps += warp.name + ", ";
                             pubWarps++;
                         } else {
-                            prWarps.add(warp.name);
+                            prWarps += warp.name + ", ";
                             privWarps++;
                         }
                     }
 
-                    String upWarps = "";
-                    String rpWarps = "";
-
-                    for (String warp : puWarps) {
-                        upWarps += warp + ", ";
-                    }
-
-                    for (String warp : prWarps) {
-                        rpWarps += warp + ", ";
-                    }
-
-                    upWarps = upWarps.trim();
-                    rpWarps = rpWarps.trim();
-
+                    puWarps = puWarps.trim();
+                    prWarps = prWarps.trim();
 
                     player.sendMessage(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "YOUR WARPS" + ChatColor.RED + " --------------------");
                     player.sendMessage(ChatColor.RED + "Private Warps: " + ChatColor.WHITE + privWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPrivWarps);
-                    player.sendMessage(ChatColor.RED + "Private Warps List: " + ChatColor.WHITE + rpWarps);
+                    player.sendMessage(ChatColor.RED + "Private Warps List: " + ChatColor.WHITE + prWarps);
                     player.sendMessage(ChatColor.RED + "Public Warps: " + ChatColor.WHITE + pubWarps + ChatColor.GRAY + "/" + ChatColor.WHITE + maxPubWarps);
-                    player.sendMessage(ChatColor.RED + "Public Warps List: " + ChatColor.WHITE + upWarps);
+                    player.sendMessage(ChatColor.RED + "Public Warps List: " + ChatColor.WHITE + puWarps);
                     player.sendMessage(ChatColor.RED + "--------------------       --------------------");
                 } else if (args.length > 1 && args[0].equalsIgnoreCase("search") && WarpPermissions.search(player)) {
                     String name = "";
