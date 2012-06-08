@@ -1,14 +1,13 @@
 name: MyWarp
+main: me.taylorkelly.mywarp.MyWarp
 version: ${m.version}-${build.number}-${p.version}
 author: spathizilla
 authors: 
   - flames
   - tkelly
   - MiracleM4n
-softdepend:
-  - Help
-main: me.taylorkelly.mywarp.MyWarp
 commands:
-  warp:
+  mywarp:
     description: All of the MyWarp commands
     usage: /<command> help - Displays the help for MyWarp
+    aliases: [mw, warp]
