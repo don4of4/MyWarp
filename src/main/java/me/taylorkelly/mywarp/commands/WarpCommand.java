@@ -33,7 +33,7 @@ public class WarpCommand implements CommandExecutor {
                 if (args.length == 1 && args[0].equalsIgnoreCase("reload") && WarpPermissions.isAdmin(player)) {
                     WarpSettings.initialize(plugin.getDataFolder());
                     player.sendMessage("[MyWarp] Reloading config");
-                } else if ((args.length == 1 || (args.length > 1 && MyWarp.isInteger(args[1]))) && args[0].equalsIgnoreCase("list") && WarpPermissions.list(player)) {
+                } else if ((args.length == 1 || (args.length == 2 && MyWarp.isInteger(args[1]))) && args[0].equalsIgnoreCase("list") && WarpPermissions.list(player)) {
                     Lister lister = new Lister(plugin.warpList);
                     lister.addPlayer(player);
 
