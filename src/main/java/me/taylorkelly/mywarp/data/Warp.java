@@ -1,12 +1,14 @@
 package me.taylorkelly.mywarp.data;
 
-import java.util.ArrayList;
-
 import me.taylorkelly.mywarp.WarpSettings;
 import me.taylorkelly.mywarp.permissions.WarpPermissions;
-
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 public class Warp {
 

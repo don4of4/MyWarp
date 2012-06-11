@@ -4,7 +4,6 @@ import me.taylorkelly.mywarp.WarpSettings;
 import me.taylorkelly.mywarp.data.SignWarp;
 import me.taylorkelly.mywarp.data.WarpList;
 import me.taylorkelly.mywarp.permissions.WarpPermissions;
-
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;

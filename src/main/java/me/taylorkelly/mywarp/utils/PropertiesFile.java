@@ -1,8 +1,9 @@
 package me.taylorkelly.mywarp.utils;
 
 import java.io.*;
-import java.util.*;
+import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -1,11 +1,10 @@
 package me.taylorkelly.mywarp.data;
 
-import java.util.ArrayList;
-
-
 import org.angelsl.minecraft.randomshit.fontwidth.MinecraftFontWidthCalculator;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 
 public class Lister {

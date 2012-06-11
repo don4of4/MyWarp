@@ -1,9 +1,7 @@
 package me.taylorkelly.mywarp.commands;
 
 import me.taylorkelly.mywarp.MyWarp;
-
 import me.taylorkelly.mywarp.WarpSettings;
-import me.taylorkelly.mywarp.data.Lister;
 import me.taylorkelly.mywarp.data.Searcher;
 import me.taylorkelly.mywarp.data.Warp;
 import me.taylorkelly.mywarp.permissions.WarpPermissions;
@@ -33,27 +31,11 @@ public class WarpCommand implements CommandExecutor {
                 if (args.length == 1 && args[0].equalsIgnoreCase("reload") && WarpPermissions.isAdmin(player)) {
                     WarpSettings.initialize(plugin.getDataFolder());
                     player.sendMessage("[MyWarp] Reloading config");
-                } else if ((args.length == 1 || (args.length == 2 && MyWarp.isInteger(args[1]))) && args[0].equalsIgnoreCase("list") && WarpPermissions.list(player)) {
-                    Lister lister = new Lister(plugin.warpList);
-                    lister.addPlayer(player);
-
-                    if (args.length == 2) {
-                        int page = Integer.parseInt(args[1]);
-                        if (page < 1) {
-                            player.sendMessage(ChatColor.RED + "Page number can't be below 1.");
-                            return true;
-                        } else if (page > lister.getMaxPages(player)) {
-                            player.sendMessage(ChatColor.RED + "There are only " + lister.getMaxPages(player) + " pages of warps");
-                            return true;
-                        }
-                        lister.setPage(page);
-                    } else {
-                        lister.setPage(1);
-                    }
-                    lister.list();
-                } else if (args.length == 1 && args[0].equalsIgnoreCase("slist") && WarpPermissions.list(player)) {
+                } else if (args.length > 0 && args[0].equalsIgnoreCase("list") && WarpPermissions.list(player)) {
+                    plugin.getServer().dispatchCommand(player, "mywarp stats");
+                } else if (args.length > 0 && args[0].equalsIgnoreCase("slist") && WarpPermissions.list(player)) {
                     plugin.warpList.list(player);
-                } else if (args.length > 0 && args[0].equalsIgnoreCase("stats")) {
+                } else if (args.length > 0 && args[0].equalsIgnoreCase("stats") && WarpPermissions.list(player)) {
                     Integer maxPubWarps = WarpPermissions.maxPublicWarps(player);
                     Integer maxPrivWarps = WarpPermissions.maxPrivateWarps(player);
 
@@ -87,6 +69,7 @@ public class WarpCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.RED + "--------------------       --------------------");
                 } else if (args.length > 1 && args[0].equalsIgnoreCase("search") && WarpPermissions.search(player)) {
                     String name = "";
+
                     for (int i = 1; i < args.length; i++) {
                         name += args[i];
                         if (i + 1 < args.length) {
@@ -225,7 +208,7 @@ public class WarpCommand implements CommandExecutor {
                         }
                     }
                     plugin.warpList.adminWarpTo(name, invitee, player);
-                } else if (args.length == 1 && args[0].equalsIgnoreCase("help") || args.length == 0) {
+                } else if (args.length > 0 && args[0].equalsIgnoreCase("help") || args.length == 0) {
                     ArrayList<String> messages = new ArrayList<String>();
                     messages.add(ChatColor.RED + "-------------------- " + ChatColor.WHITE + "/WARP HELP" + ChatColor.RED + " --------------------");
                     if (WarpPermissions.warp(player)) {

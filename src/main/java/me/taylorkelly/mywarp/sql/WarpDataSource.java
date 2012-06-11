@@ -1,20 +1,13 @@
 package me.taylorkelly.mywarp.sql;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.io.File;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import me.taylorkelly.mywarp.WarpSettings;
 import me.taylorkelly.mywarp.data.Warp;
 import me.taylorkelly.mywarp.utils.WarpLogger;
+
+import java.io.File;
+import java.sql.*;
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class WarpDataSource {
 	public final static String sqlitedb = "/warps.db";

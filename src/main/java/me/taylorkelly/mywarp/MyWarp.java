@@ -1,13 +1,5 @@
 package me.taylorkelly.mywarp;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Connection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import me.taylorkelly.mywarp.commands.WarpCommand;
 import me.taylorkelly.mywarp.data.WarpList;
 import me.taylorkelly.mywarp.griefcraft.Updater;
@@ -17,9 +9,16 @@ import me.taylorkelly.mywarp.permissions.WarpPermissions;
 import me.taylorkelly.mywarp.sql.ConnectionManager;
 import me.taylorkelly.mywarp.utils.WarpHelp;
 import me.taylorkelly.mywarp.utils.WarpLogger;
-
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MyWarp extends JavaPlugin {
 
