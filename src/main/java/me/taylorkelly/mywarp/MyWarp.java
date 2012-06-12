@@ -44,6 +44,7 @@ public class MyWarp extends JavaPlugin {
         if(!sqlCheck()) { return; }
 
         Connection conn = ConnectionManager.initialize();
+
         if (conn == null) {
             log.log(Level.SEVERE, "[MYWARP] Could not establish SQL connection. Disabling MyWarp");
             getServer().getPluginManager().disablePlugin(this);
