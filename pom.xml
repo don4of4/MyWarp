@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <build.number>Unknown</build.number>
         <m.version>1.2.5</m.version>
-        <p.version>R0.6</p.version>
+        <p.version>R0.11</p.version>
     </properties>
 
     <!-- Repository locations -->
@@ -43,7 +43,7 @@
     </repositories>
 
     <build>
-        <defaultGoal>clean install</defaultGoal>
+        <defaultGoal>package</defaultGoal>
         <!-- Resources -->
         <resources>
             <resource>
@@ -80,7 +80,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.2.5-R3.0</version>
+            <version>1.2.5-R4.0</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

@@ -1,11 +1,10 @@
 package me.taylorkelly.mywarp.data;
 
-import java.util.ArrayList;
-
-
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
+
+import java.util.ArrayList;
 
 public class SignWarp {
     

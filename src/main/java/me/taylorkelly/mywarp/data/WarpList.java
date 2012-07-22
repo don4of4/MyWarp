@@ -1,17 +1,17 @@
 package me.taylorkelly.mywarp.data;
 
+import me.taylorkelly.mywarp.WarpSettings;
+import me.taylorkelly.mywarp.permissions.WarpPermissions;
+import me.taylorkelly.mywarp.sql.WarpDataSource;
+import org.bukkit.ChatColor;
+import org.bukkit.Server;
+import org.bukkit.entity.Player;
+
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-
-import me.taylorkelly.mywarp.WarpSettings;
-import me.taylorkelly.mywarp.permissions.WarpPermissions;
-import me.taylorkelly.mywarp.sql.WarpDataSource;
-
-import org.bukkit.*;
-import org.bukkit.entity.Player;
 
 public class WarpList {
     private HashMap<String, Warp> warpList;
