@@ -1,7 +1,6 @@
 package me.taylorkelly.mywarp.permissions;
 
 import me.taylorkelly.mywarp.utils.WarpLogger;
-
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;

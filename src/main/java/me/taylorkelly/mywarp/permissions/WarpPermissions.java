@@ -1,7 +1,6 @@
 package me.taylorkelly.mywarp.permissions;
 
 import me.taylorkelly.mywarp.WarpSettings;
-
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 

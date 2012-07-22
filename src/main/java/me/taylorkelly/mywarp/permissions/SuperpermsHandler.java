@@ -1,14 +1,13 @@
 package me.taylorkelly.mywarp.permissions;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import me.taylorkelly.mywarp.WarpSettings;
-
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 public class SuperpermsHandler implements IPermissionsHandler {

@@ -1,8 +1,8 @@
 package me.taylorkelly.mywarp;
 
-import java.io.File;
-
 import me.taylorkelly.mywarp.utils.PropertiesFile;
+
+import java.io.File;
 
 public class WarpSettings {
     
