@@ -141,22 +141,28 @@ public class WarpList {
     }
 
     public void privatize(String name, Player player) {
-        MatchList matches = this.getMatches(name, player);
-        name = matches.getMatch(name);
-        if (warpList.containsKey(name)) {
-            Warp warp = warpList.get(name);
-            if (warp.playerCanModify(player)) {
-                warp.publicAll = false;
-                WarpDataSource.publicizeWarp(warp, false);
-                player.sendMessage(ChatColor.AQUA + "You have privatized '" + name + "'");
-                player.sendMessage("If you'd like to invite others to it,");
-                player.sendMessage("Use: " + ChatColor.RED + "/warp invite <player> " + name);
-            } else {
-                player.sendMessage(ChatColor.RED + "You do not have permission to privatize '" + name + "'");
-            }
-        } else {
-            player.sendMessage(ChatColor.RED + "No such warp '" + name + "'");
-        }
+    	if (playerCanBuildPrivateWarp(player)){
+	        MatchList matches = this.getMatches(name, player);
+	        name = matches.getMatch(name);
+	        if (warpList.containsKey(name)) {
+	            Warp warp = warpList.get(name);
+	            if (warp.playerCanModify(player)) {
+	                warp.publicAll = false;
+	                WarpDataSource.publicizeWarp(warp, false);
+	                player.sendMessage(ChatColor.AQUA + "You have privatized '" + name + "'");
+	                player.sendMessage("If you'd like to invite others to it,");
+	                player.sendMessage("Use: " + ChatColor.RED + "/warp invite <player> " + name);
+	            } else {
+	                player.sendMessage(ChatColor.RED + "You do not have permission to privatize '" + name + "'");
+	            }
+	        } else {
+	            player.sendMessage(ChatColor.RED + "No such warp '" + name + "'");
+	        }
+    	} else {
+    		player.sendMessage(ChatColor.RED + "You have reached your max # of private warps " + ChatColor.YELLOW + "("
+                    + WarpPermissions.maxPrivateWarps(player) + ")");
+            player.sendMessage("Delete some of your warps to make more");
+    	}
     }
 
     public void invite(String name, Player player, String inviteeName) {

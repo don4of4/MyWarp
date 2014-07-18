@@ -21,12 +21,10 @@ public class WarpCommand implements CommandExecutor {
     public WarpCommand(MyWarp instance) {
         plugin = instance;
     }
-
+    
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String commandName = command.getName().toLowerCase();
-
-        if (!commandName.equals("warp") || !commandName.equals("mywarp") || !commandName.equals("mw"))
-            return true;
 
         if (sender instanceof Player) {
             Player player = (Player) sender;
